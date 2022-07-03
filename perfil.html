@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+
+    <!-- SweetAlert -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <title>I love my money</title>
+
+</head>
+
+<body style="background-color: #30372E; color: antiquewhite;" ng-app="money" ng-controller="controllerPerfil">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="monedero.html">
+            <img src="/images/ILoveMyMoney.png" height="30" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="monedero.html">Monedero</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Ingresos
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown"> 
+                        <a class="dropdown-item" ng-repeat="item in categorias" ng-click="categoriaSave(item.idCategoria, 1)">{{item.nombre}}</a>
+                    </div> 
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Egresos
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" ng-repeat="item in categorias" ng-click="categoriaSave(item.idCategoria, 2)">{{item.nombre}}</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="historial.html">Historial</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="perfil.html">Perfil</a>
+                </li>
+            </ul>
+            <div class="form-inline my-2 my-lg-0">
+                <h5 class="mr-sm-2 my-sm-0" style="color: #4CDC08">Saldo actual: </h5>
+                <span class="mr-sm-3 my-sm-0"> </span>
+                <h5 class="mr-sm-2 my-sm-0" style="color: #4CDC08">${{user.monto}}</h5>
+            </div>
+            <button class="btn btn-danger my-2 my-sm-0" type="submit" id="logOut" ng-click="cerrarSesion()"><i
+                    class="fas fa-sign-out-alt"></i> Sign out</button>
+        </div>
+    </nav>
+    <div class="container" style="margin-top: 20px;">
+        <h1>Tu cuenta</h1>
+        <form
+            style="margin-bottom: 20px; margin-top: 20px; border-top-left-radius: 50px; border-top-right-radius: 50px;"
+            class="border-top border-warning" enctype="multipart/form-data">
+            <div class="row text-center align-items-center" style="margin-top: 40px;">
+                <div class="col-lg-4 border-right border-bottom border-warning"
+                    style="padding: 10px; border-bottom-right-radius: 50px;">
+                        <div class="col-lg-12 text-center" style="margin-top: 10px; margin-bottom: 10px;">
+                            <img src="data:{{user.usuario.tipoPhoto}};base64,{{user.usuario.photo}}" width="200" height="200" id="photoUser" style="border-radius: 50%;">
+                        </div>
+                </div>
+                <div class="col-lg-4">
+                    <button id="btnCamera" class="btn btn-primary btn-block" disabled>Abrir camara</button>
+                    <button id="btnBackCa" class="btn btn-primary btn-block" disabled>Abrir camara trasera</button>
+                    <button id="btnTakeOn" class="btn btn-primary btn-block" disabled>Tomar foto</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnFile" onclick="changePhoto()"
+                    disabled><i class="fas fa-upload"></i> Subir foto</button>
+                </div>
+                <div class="col-lg-4">
+                    <div class="col-lg-12 text-center" style="height: 200px; margin-bottom: 10px;">
+                        <video id="player" class="img-fluid" autoplay class="border-primary"></video>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form
+            style="margin-bottom: 25px; padding: 30px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;"
+            class="border-bottom border-warning">
+            <div class="row" style="margin-top: 10px;">
+                <div class="form-group col-lg-4">
+                    <label for="exampleInputEmail1" id="lblCreateName">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" aria-describedby="emailHelp"
+                        ng-model="usuario.nombre" ng-value="user.usuario.nombre" disabled>
+                </div>
+                <div class="form-group col-lg-4">
+                    <label for="exampleInputEmail1" id="lblCreatePater">Apellido Paterno</label>
+                    <input type="text" class="form-control" id="apelPater" aria-describedby="emailHelp"
+                        ng-model="usuario.apellidoPaterno" ng-value="user.usuario.apellidoPaterno" disabled>
+                </div>
+                <div class="form-group col-lg-4">
+                    <label for="exampleInputEmail1" id="lblCreateMater">Apellido Materno</label>
+                    <input type="text" class="form-control" id="apelMater" aria-describedby="emailHelp"
+                        ng-model="usuario.apellidoMaterno" ng-value="user.usuario.apellidoMaterno" disabled>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-lg-6">
+                    <button class="btn btn-outline-success btn-lg btn-block" id="btnEnable" data-toggle="modal"
+                        data-target="#exampleModal2"><i class="fas fa-user-edit"></i> Editar</button>
+                </div>
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-outline-primary btn-lg btn-block" id="btnEdit" disabled
+                        ng-click="actualizarUser()"><i class="fas fa-user-check"></i> Listo</button>
+                </div>
+            </div>
+        </form>
+        <h2>Categorias</h2>
+        <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+            <div class="col-lg-8">
+
+            </div>
+            <div class="col-lg-4 text-right">
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i
+                        class="fas fa-plus"></i> Crear</button>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-lg-6">
+                <h3>Activas</h3>
+                <div ng-if="categorias.length > 0">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in categorias">
+                                <th scope="row">{{$index+1}}</th>
+                                <td>{{item.nombre}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-success" data-toggle="modal"
+                                        data-target="#exampleModal3" ng-click="getCategory(item.idCategoria)"><i class="fas fa-pen-square"></i> Editar</button>
+                                    <button type="button" class="btn btn-outline-warning"
+                                        ng-click="changeStatus(item.idCategoria)"><i class="fas fa-eye-slash"></i>
+                                        Desactivar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="categorias.length == 0" class="bg-dark text-white"
+                    style="padding: 10px; text-align: center;">
+                    Actualmente no tienes una categoria activa, pulsa el boton activar o crear para agregar una
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h3>Inactivas</h3>
+                <div ng-if="desactivadas.length > 0">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in desactivadas">
+                                <th scope="row">{{$index+1}}</th>
+                                <td>{{item.nombre}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-success" data-toggle="modal"
+                                    data-target="#exampleModal3" ng-click="getCategory(item.idCategoria)"><i class="fas fa-pen-square"></i> Editar</button>
+                                    <button type="button" class="btn btn-outline-warning"
+                                        ng-click="changeStatus(item.idCategoria)"><i class="fas fa-eye"></i>
+                                        Activar</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="desactivadas.length == 0" class="bg-dark text-white"
+                    style="padding: 10px; text-align: center;">
+                    Actualmente no tienes una categoria inactiva, pulsa el boton desactivar para agregar una
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        style="color: black;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Categorias</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body" id="modalBodyCate">
+                        <div class="row">
+                            <div class="col-lg-8"></div>
+                            <div class="col-lg-4 text-right">
+                                <button class="btn btn-success" id="btnAdd"><i class="fas fa-plus"></i> Añadir</button>
+                            </div>
+                        </div>
+                        <div class="form-group border-bottom border-dark" style="padding-bottom: 30px;">
+                            <label for="exampleInputEmail1">Nombre</label>
+                            <input type="text" class="form-control inputCustom" id="nombreCategor-1"
+                                aria-describedby="emailHelp">
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="modalFooterCate">
+                        <button type="button" class="btn btn-primary" ng-click="registrarCategorias()"
+                            id="btnCreateCategory" disabled>Guardar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        style="color: black;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Verifica tu identidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form ng-submit="checkPassword()">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Contraseña</label>
+                            <input type="password" class="form-control" aria-describedby="emailHelp"
+                                ng-model="check.contrasena">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Verificar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        style="color: black;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Categoria</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form ng-model="categoria">
+                    <div class="modal-body">
+                        <div class="form-group" style="padding-bottom: 30px;">
+                            <label for="nombreUpdate" id="lblUpdate">Nombre</label>
+                            <input type="text" class="form-control inputCustom" id="nombreUpdate"
+                                aria-describedby="emailHelp" ng-model="categoria.nombre">
+                        </div>
+                        <input type="hidden" ng-model="categoria.usuario.idUsuario" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-click="categoryUpdate()" id="btnCategoryUpdate">Guardar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="page-footer font-small bg-dark">
+
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2020 Copyright:
+            <a href="http://www.utez.edu.mx/"> Universidad Tecnologica Emiliano Zapata</a>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="/js/camera.js"></script>
+    <script src="/js/perfilAngular.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

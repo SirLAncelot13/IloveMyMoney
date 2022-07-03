@@ -1,0 +1,41 @@
+{
+    "short_name": "I Love My Money",
+    "name": "I Love My Money - Tu alcancia digital",
+    "start_url": "index.html",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#2BB635",
+    "theme_color": "#2BB635",
+    "icons": [
+         {
+            "src": "images/icons/money-48-48.png",
+            "type": "image/png",
+            "sizes": "48x48"
+         },
+         {
+             "src": "images/icons/money-72-72.png",
+             "type": "image/png",
+             "sizes": "72x72"
+         },
+         {
+             "src": "images/icons/money-96-96.png",
+             "type": "image/png",
+             "sizes": "96x96"
+         },
+         {
+             "src": "images/icons/money-144-144.png",
+             "type": "image/png",
+             "sizes": "144x144"
+         },
+         {
+             "src": "images/icons/money-192-192.png",
+             "type": "image/png",
+             "sizes": "192x192"
+         },
+         {
+             "src": "images/icons/money-512-512.png",
+             "type": "image/png",
+             "sizes": "512x512"
+         }
+    ]
+ }
